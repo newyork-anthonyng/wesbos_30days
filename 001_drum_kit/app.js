@@ -76,9 +76,30 @@ function init() {
     node.addEventListener("transitionend", function(e) {
       node.classList.remove("instrument__playing");
     });
+
+    node.addEventListener("click", function() {
+      const clicked = this.getAttribute("data-key");
+      const audio = new Audio(instruments[clicked].audio);
+      audio.play();
+
+      this.classList.add("instrument__playing");
+    });
+
+    const ENTER_KEY = 13;
+    const SPACE_KEY = 32;
+    node.addEventListener("keypress", function(e) {
+      if (e.which === ENTER_KEY || e.which === SPACE_KEY) {
+        e.preventDefault();
+
+        const clicked = this.getAttribute("data-key");
+        const audio = new Audio(instruments[clicked].audio);
+        audio.play();
+  
+        this.classList.add("instrument__playing");
+      }
+    });
   });
 
-  // Add event listeners for key presses
   document.addEventListener("keydown", e => {
     if (keys.indexOf(`${e.which}`) === -1) {
       return;

@@ -13,6 +13,8 @@
         .instrument {
             border: 1px solid black;
             display: inline-block;
+            height: 50px;
+            width: 50px;
             text-align: center;
             padding: 16px;
             transition: transform 0.1s;
@@ -39,7 +41,7 @@
         </main>
 
         <template id="instrument-template">
-            <div class="instrument">
+            <div class="instrument" tabindex="0">
                 <span class="instrument--key"></span>
                 <span class="instrument--description"></span>
             </div>
