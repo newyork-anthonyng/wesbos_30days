@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Clock</title>
+        <link href="manifest.json" rel="manifest">
+        <meta name="theme-color" content="#000000">
+        <style>
+            html, body {
+                height: 100%;
+            }
+
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .clock {
+                border: 10px solid black;
+                height: 260px;
+                width: 260px;
+                border-radius: 50%
+            }
+
+            .clock__minute,
+            .clock__second,
+            .clock__hour {
+                border: 1px solid black;
+                transform-origin: top left;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
+
+            .clock__minute {
+                width: 120px;
+            }
+
+            .clock__hour {
+                width: 90px;
+            }
+
+            .clock__second {
+                width: 120px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="clock">
+            <div class="js-hour clock__hour"></div>
+            <div class="js-second clock__second"></div>
+            <div class="js-minute clock__minute"></div>
+        </div>
+
+        <noscript>Please enable JavaScript.</noscript>
+        <script type="text/javascript">
+            const hourElement = document.querySelector('.js-hour');
+            const secondElement = document.querySelector('.js-second');
+            const minuteElement = document.querySelector('.js-minute');
+
+            function update() {
+                const date = new Date();
+
+                const seconds = date.getSeconds();
+                const secondDegrees = (seconds/60 * 360) - 90;
+                secondElement.style.transform = `rotate(${secondDegrees}deg)`;
+
+                const minutes = date.getMinutes();
+                const minuteDegrees = (minutes/60 * 360) - 90;
+                minuteElement.style.transform = `rotate(${minuteDegrees}deg)`;
+
+                const hours = date.getHours();
+                let hourDegrees = (hours/24 * 360) - 90;
+                hourElement.style.transform = `rotate(${hourDegrees}deg)`;
+            }
+
+            update();
+            window.setInterval(update, 1000);
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('%c[SW] Registration succeeded', 'color: green;');                    
+                }, err => {
+                    console.log('%c[SW] Registration failed ' + err, 'color: red;');                    
+                });
+            }
+        </script>
+    </body>
+</html>
