@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CSS Variables with JS</title>
+        <style>
+            :root {
+                --color: tomato;
+                --spacing: 0px;
+                --blur: 0px;
+            }
+            .image__container {
+                background-color: var(--color, white);
+                position: relative;
+                height: 500px;
+            }
+
+            .image {
+                width: 50%;
+                position: absolute;
+                top: var(--spacing);
+                left: var(--spacing);
+                filter: blur(var(--blur));
+            }
+
+            .color-example {
+                color: var(--color, black);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Update CSS Variables with <span class="color-example js-colorExample">JS</span></h1>
+
+        <div>
+            <label for="spacing">Spacing</label>
+            <input min="0" max="100" value="0" type="range" id="spacing" class="js-spacingInput" />
+
+            <label for="blur">Blur</label>
+            <input min="0" max="100" value="0" type="range" id="blur" class="js-blurInput" />
+
+            <label for="color">Color</label>
+            <input value="#ff6347" type="color" id="color" class="js-colorInput" />
+        </div>
+
+        <div class="image__container js-imageContainer">
+            <img class="image js-image" src="https://picsum.photos/800/500/?random">
+        </div>
+        
+        <script type="text/javascript">
+            const spacingNode = document.querySelector(".js-spacingInput");
+            const blurNode = document.querySelector(".js-blurInput");
+            const colorNode = document.querySelector(".js-colorInput");
+
+            const imageContainerNode = document.querySelector(".js-imageContainer");
+            const imageNode = document.querySelector(".js-image");
+            const colorExampleNode = document.querySelector(".js-colorExample");
+
+            spacingNode.addEventListener("input", function(e) {
+                imageNode.style.setProperty("--spacing", `${e.target.value}px`);
+            });
+
+            blurNode.addEventListener("input", function(e) {
+                imageNode.style.setProperty("--blur", `${e.target.value}px`);
+            });
+
+            colorNode.addEventListener("input", function(e) {
+                colorExampleNode.style.setProperty("--color", e.target.value);
+                imageContainerNode.style.setProperty("--color", e.target.value);
+            })
+        </script>
+    </body>
+</html>
