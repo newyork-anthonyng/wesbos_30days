@@ -33,13 +33,13 @@
 
         <div>
             <label for="spacing">Spacing</label>
-            <input min="0" max="100" value="0" type="range" id="spacing" class="js-spacingInput" />
+            <input min="0" max="100" value="0" type="range" id="spacing" data-suffix="px" />
 
             <label for="blur">Blur</label>
-            <input min="0" max="100" value="0" type="range" id="blur" class="js-blurInput" />
+            <input min="0" max="100" value="0" type="range" id="blur" data-suffix="px" />
 
             <label for="color">Color</label>
-            <input value="#ff6347" type="color" id="color" class="js-colorInput" />
+            <input value="#ff6347" type="color" id="color" />
         </div>
 
         <div class="image__container js-imageContainer">
@@ -47,26 +47,19 @@
         </div>
         
         <script type="text/javascript">
-            const spacingNode = document.querySelector(".js-spacingInput");
-            const blurNode = document.querySelector(".js-blurInput");
-            const colorNode = document.querySelector(".js-colorInput");
-
             const imageContainerNode = document.querySelector(".js-imageContainer");
             const imageNode = document.querySelector(".js-image");
             const colorExampleNode = document.querySelector(".js-colorExample");
 
-            spacingNode.addEventListener("input", function(e) {
-                imageNode.style.setProperty("--spacing", `${e.target.value}px`);
-            });
+            function update(e) {
+                const suffix = this.dataset.suffix || "";
+                const cssVariable = this.getAttribute("id");
 
-            blurNode.addEventListener("input", function(e) {
-                imageNode.style.setProperty("--blur", `${e.target.value}px`);
-            });
+                document.documentElement.style.setProperty(`--${cssVariable}`, `${e.target.value}${suffix}`)
+            }
 
-            colorNode.addEventListener("input", function(e) {
-                colorExampleNode.style.setProperty("--color", e.target.value);
-                imageContainerNode.style.setProperty("--color", e.target.value);
-            })
+            const inputNodes = document.querySelectorAll("input");
+            inputNodes.forEach(node => node.addEventListener("input", update));
         </script>
     </body>
 </html>
