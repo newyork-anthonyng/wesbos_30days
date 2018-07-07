@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Type ahead</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html {
+                box-sizing: border-box;
+                font-family: Helvetica, sans-serif;
+                font-size: 20px;
+            }
+            .results {
+                padding: 0;
+            }
+            .card {
+                background: white;
+                list-style: none;
+                border-bottom: 1px solid #D8D8D8;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.14);
+                margin: 0;
+                padding: 20px;
+                display: flex;
+                justify-content: space-between;
+                text-transform: capitalize;
+            }
+            .card:nth-child(even) {
+                transform: perspective(100px) rotateX(3deg) translateY(2px) scale(1.001);
+                background: linear-gradient(to bottom, #fff 0%, #EFEFEF 100%);
+            }
+
+            .card:nth-child(odd) {
+                transform: perspective(100px) rotateX(-3deg) translateY(3px);
+                background: linear-gradient(to top, #fff 0%, #EFEFEF 100%);
+            }
+
+            .highlight {
+                background-color: yellow;
+            }
+        </style>
+    </head>
+    <body>
+       <label for="search">Filter for a city or state</label>
+       <input type="text" id="search" class="input js-input" placeholder="City or State">
+
+       <ul class="js-results results"></ul>
+
+       <template id="js-result-card">
+         <li class="card">
+             <span class="card__location"></span>
+             <span class="card__population"></span>
+         </li>
+       </template>
+
+       <script type="text/javascript">
+        const URL = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';        
+        let cities = [];
+        fetch(URL)
+            .then(response => response.json())
+            .then(response => {
+                cities = response.map(location => {
+                    return {
+                        name: `${location.city}, ${location.state}`,
+                        population: location.population
+                    }
+                });
+            })
+
+        const inputEle = document.querySelector(".js-input");
+        inputEle.addEventListener("input", function(e) {
+            const searchTerm = e.target.value;
+
+            const filteredList = getFilteredCityList(cities, searchTerm);
+            // const filteredList = cities.filter(city => {
+            //     return city.name.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0;
+            // });
+
+            renderList(filteredList);
+        });
+
+        const template = document.querySelector("#js-result-card");
+        const listEle = document.querySelector(".js-results");
+        function renderList(cities) {
+            clearChildrenFromNode(listEle);
+            const fragment = document.createDocumentFragment();
+            cities.forEach(city => {
+                const clone = document.importNode(template.content, true);
+
+                const locationNode = clone.querySelector(".card__location");
+                locationNode.innerHTML = city.name;
+                const populationNode = clone.querySelector(".card__population");
+                populationNode.textContent = city.population;
+                
+                fragment.appendChild(clone);
+            });
+
+            listEle.appendChild(fragment);
+        }
+
+        function clearChildrenFromNode(node) {
+            while(node.firstChild) {
+                node.removeChild(node.firstChild);
+            }
+        }
+
+        function getFilteredCityList(list, searchTerm) {
+            const regex = new RegExp(searchTerm, 'gi');
+
+            const mappedList = list.map(city => {
+                if (city.name.match(regex)) {
+                    return {
+                        name: city.name.replace(regex, `<span class="highlight">${searchTerm}</span>`),
+                        population: city.population
+                    };
+                }
+                return undefined;
+            });
+
+            return mappedList.filter(Boolean);
+        }
+
+        renderList([{ name: "New York", population: 20000 }, { name: "San Francisco", population: 30 }]);
+       </script>
+    </body>
+</html>
