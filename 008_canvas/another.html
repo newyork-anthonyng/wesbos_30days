@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Canvas</title>
+        <style>
+            canvas {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Anthony Ng</h1>
+        <canvas class="js-canvas" width="800" height="800"></canvas>
+
+        <script type="text/javascript">
+            const canvasEle = document.querySelector(".js-canvas");
+
+            const ctx = canvasEle.getContext("2d");
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#BADA55";
+            let hue = 0;
+            const origin = {
+               x: window.innerWidth / 2,
+               y: window.innerHeight / 2 
+            };
+
+            function handleMouseMove(e) {
+                ctx.moveTo(origin.x, origin.y);                            
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                ctx.strokeStyle = `hsl(${hue++}, 100%, 50%)`;
+
+                if (hue >= 360) hue = 0;
+            }
+            window.addEventListener("mousemove", handleMouseMove);
+        </script>
+    </body>
+</html>
