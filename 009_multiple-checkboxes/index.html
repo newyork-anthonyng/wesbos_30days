@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Todo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            input:checked + * {
+                text-decoration: line-through;
+            }
+        </style>
+    </head>
+    <body>
+        <ul class="js-todolist">
+            <li><label><input data-index="0" type="checkbox" checked><span>Walk dog</span></label></li>
+            <li><label><input data-index="1" type="checkbox"><span>Go shopping</span></label></li>
+            <li><label><input data-index="2" type="checkbox"><span>Learn JavaScript</span></label></li>
+            <li><label><input data-index="3" type="checkbox"><span>Finish 30 courses</span></label></li>
+        </ul>
+        <script type="text/javascript">
+            const todoListEle = document.querySelector(".js-todolist");
+            const todoItemsEle = document.querySelectorAll(".js-todolist input");
+            let shiftKeyPressed = false;
+            let firstItem = null;
+
+            todoItemsEle.forEach(todoItem => {
+                todoItem.addEventListener("change", function(e) {
+                    const index = this.dataset.index;
+
+                    // Don't do anything if we are clicking on the same item
+                    if (index === firstItem) return;
+
+                    if (shiftKeyPressed) {
+                        if (firstItem === null) {
+                            firstItem = index;
+                        } else {
+                            // check all checkboxes between the current index, and the previousItem
+                            // const rangeOfIndexesToCheck = 
+                            const lowerIndex = Math.min(index, firstItem);
+                            const upperIndex = Math.max(index, firstItem);
+                            todoItemsEle.forEach(todoItem => {
+                                const currentIndex = todoItem.dataset.index;
+                                if (currentIndex < upperIndex && currentIndex > lowerIndex) {
+                                    todoItem.checked = true;
+                                }
+                            });
+
+                            firstItem = null;
+                        }
+                    }
+                });
+            });
+
+            window.addEventListener("keydown", function(e) {
+                if (e.shiftKey) shiftKeyPressed = true;
+            });
+
+            window.addEventListener("keyup", function(e) {
+                if (!e.shiftKey) shiftKeyPressed = false;
+            });
+        </script>
+    </body>
+</html>
