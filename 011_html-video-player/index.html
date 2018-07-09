@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Video Player</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+   <div class="player">
+     <video class="player__video viewer" src="https://player.vimeo.com/external/194837908.sd.mp4?s=c350076905b78c67f74d7ee39fdb4fef01d12420&profile_id=164"></video>
+
+     <div class="player__controls">
+       <div class="progress">
+        <div class="progress__filled"></div>
+       </div>
+       <button class="player__button toggle" title="Toggle Play">►</button>
+       <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1">
+       <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1">
+       <button data-skip="-10" class="player__button">« 10s</button>
+       <button data-skip="25" class="player__button">25s »</button>
+     </div>
+   </div>
+
+  <script type="text/javascript">
+    let isVideoPlaying = false;
+    let interval = null;
+    const videoEle = document.querySelector(".player__video");
+    const playButtonEle = document.querySelector(".player__button");
+    const skipButtonEle = document.querySelectorAll("[data-skip]");
+    const rangeEle = document.querySelectorAll("input[name]")
+    const progressControlEle = document.querySelector(".progress");
+    const progressEle = document.querySelector(".progress__filled");
+
+    playButtonEle.addEventListener("click", togglePlayingVideo);
+    videoEle.addEventListener("click", togglePlayingVideo);
+    skipButtonEle.forEach(button => {
+        button.addEventListener("click", handleSkip);
+    });
+    rangeEle.forEach(ele => {
+        ele.addEventListener("change", handleRangeChange);
+    });
+    progressControlEle.addEventListener("click", function(e) {
+        const percentage = Math.floor(e.offsetX / progressControlEle.offsetWidth * 100) - 1;
+        progressEle.style["flex-basis"] = `${percentage}%`;
+        videoEle.currentTime = Math.floor(videoEle.duration * (percentage / 100));
+    });
+
+    function handleRangeChange() {
+        const attribute = this.getAttribute("name");
+        videoEle[attribute] = this.value;
+    }
+
+    function togglePlayingVideo() {
+        if (isVideoPlaying) {
+            videoEle.pause();
+            if (interval) clearInterval(interval);
+        } else {
+            videoEle.play();
+            interval = setInterval(function() {
+                const progress = Math.ceil(videoEle.currentTime / videoEle.duration * 100);
+                progressEle.style["flex-basis"] = `${progress}%`;
+            }, 1000);            
+        }
+        isVideoPlaying = !isVideoPlaying;
+    }
+
+    function handleSkip() {
+        const skipAmount = parseInt(this.dataset.skip);
+        videoEle.currentTime = skipAmount + videoEle.currentTime;
+    }
+  </script>
+</body>
+</html>

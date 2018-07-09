@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Konami Cheat</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <script type="text/javascript" src="http://www.cornify.com/js/cornify.js" async></script>
+        <script type="text/javascript">
+            const KEY_UP = 38;
+            const KEY_LEFT = 37;
+            const KEY_RIGHT = 39;
+            const KEY_DOWN = 40;
+            const KEY_A = 65;
+            const KEY_B = 66;
+            const KEY_ENTER = 13;
+            const CHEAT_CODE_SEQUENCE = [
+                KEY_UP, KEY_UP,
+                KEY_DOWN, KEY_DOWN,
+                KEY_LEFT, KEY_RIGHT,
+                KEY_LEFT, KEY_RIGHT,
+                KEY_B, KEY_A, KEY_ENTER
+            ]
+            let currentIndex = 0;
+
+            window.addEventListener("keyup", function(e) {
+                console.log('currentIndex', currentIndex);
+                const currentExpectedComboPiece = CHEAT_CODE_SEQUENCE[currentIndex];
+                if (e.which === currentExpectedComboPiece) {
+                    currentIndex++;
+                    
+                    if (currentIndex >= CHEAT_CODE_SEQUENCE.length) {
+                        cornify_add && cornify_add();
+                        restartCombo();
+                    }
+                } else {
+                    restartCombo();
+                }
+            });
+
+            function restartCombo() {
+                currentIndex = 0;
+            }
+        </script>
+    </body>
+</html>
