@@ -36,7 +36,7 @@
 <script>
     const headerEle = document.querySelector("h1");
     let dimensions = headerEle.getBoundingClientRect();
-    const MAX_OFFSET = 50;
+    const MAX_OFFSET = 500;
 
     document.addEventListener('mousemove', function(e) {
         const { clientX: mouseX, clientY: mouseY } = e;
@@ -45,7 +45,11 @@
 
         const textShadowOffsetX = appleSauce(horizontalMidpoint - mouseX);
         const textShadowOffsetY = appleSauce(verticalMidpoint - mouseY);
-        headerEle.style.textShadow = `${textShadowOffsetX}px ${textShadowOffsetY}px 0 rgba(0,0,0,1)`;
+        headerEle.style.textShadow = `
+            ${textShadowOffsetX}px ${textShadowOffsetY}px 0 rgba(255,0,255,0.7),
+            -${textShadowOffsetX}px ${textShadowOffsetY}px 0 rgba(0,255,255,0.7),
+            ${textShadowOffsetX}px -${textShadowOffsetY}px 0 rgba(255,255,0,0.7)
+        `;
     });
 
     function appleSauce(num) {
