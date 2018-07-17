@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+  <div class="hero">
+    <h1>🔥WOAH!</h1>
+  </div>
+
+  <style>
+  html {
+    color:black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:black;
+  }
+
+  h1 {
+    text-shadow: 10px 10px 0 rgba(0,0,0,1);
+    font-size: 100px;
+  }
+  </style>
+
+<script>
+    const headerEle = document.querySelector("h1");
+    let dimensions = headerEle.getBoundingClientRect();
+    const MAX_OFFSET = 50;
+
+    document.addEventListener('mousemove', function(e) {
+        const { clientX: mouseX, clientY: mouseY } = e;
+        const verticalMidpoint = dimensions.top + (dimensions.height / 2);
+        const horizontalMidpoint = dimensions.left + (dimensions.width / 2);
+
+        const textShadowOffsetX = appleSauce(horizontalMidpoint - mouseX);
+        const textShadowOffsetY = appleSauce(verticalMidpoint - mouseY);
+        headerEle.style.textShadow = `${textShadowOffsetX}px ${textShadowOffsetY}px 0 rgba(0,0,0,1)`;
+    });
+
+    function appleSauce(num) {
+        return Math.min(Math.abs(num), MAX_OFFSET) * Math.sign(num);
+    }
+
+    document.addEventListener('resize', function() {
+        dimensions = headerEle.getBoundingClientRect();
+    });
+</script>
+</body>
+</html>
